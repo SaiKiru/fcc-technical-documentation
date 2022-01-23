@@ -1,58 +1,207 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Documentation</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav id="navbar">
-    <header>
-
-    </header>
+    <header>Monkey Business API</header>
 
     <ul>
-      <a href="#section_1" class="nav-link">
-        <li>Section 1</li>
+      <a href="#creating_new_users" class="nav-link">
+        <li>Creating New Users</li>
       </a>
-      <a href="#section_2" class="nav-link">
-        <li>Section 2</li>
+      <a href="#logging_in" class="nav-link">
+        <li>Logging In</li>
       </a>
-      <a href="#section_3" class="nav-link">
-        <li>Section 3</li>
+      <a href="#searching_users" class="nav-link">
+        <li>Searching Users</li>
       </a>
-      <a href="#section_4" class="nav-link">
-        <li>Section 4</li>
+      <a href="#getting_bananas" class="nav-link">
+        <li>Getting Bananas</li>
       </a>
-      <a href="#section_5" class="nav-link">
-        <li>Section 5</li>
+      <a href="#searching_for_items" class="nav-link">
+        <li>Searching for Items</li>
+      </a>
+      <a href="#buying_items" class="nav-link">
+        <li>Buying Items</li>
       </a>
     </ul>
   </nav>
 
   <main id="main-doc">
-    <header id="main-header">
+    <header id="main-header">Monkey Business API</header>
 
-    </header>
+    <p>The API is available at <code>https://api.monkeybusiness.com/</code>. Send all API requests through that link.</p>
 
-    <section class="main-section" id="section_1">
-      <header>Section 1</header>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat est sequi iusto perferendis necessitatibus commodi at enim distinctio? Modi assumenda consequatur velit recusandae tempora hic sed aspernatur porro minus ad!</p>
+    <!-- CREATING A NEW USER -->
+    <section class="main-section" id="creating_new_users">
+      <header>Creating new users</header>
+      <p>In order to avail of the services offered by Monkey Business, you must first have an account. Create a new account with the following HTTP request:</p>
+      <code class="code-block">POST /sign-up<br />
+        <span class="info">// HTTP headers</span><br />
+        <br />
+        {<br />
+        <span />"username": YOUR_USERNAME,<br />
+        <span />"email": YOUR_EMAIL,<br />
+        <span />"password": YOUR_PASSWORD<br />
+        }</code>
+      <p>Note that you must use HTTPS protocol for this to work.</p>
+
+      <p>If the request is successful, it returns a JSON object with the username, instance-id, and temporary login token for the new user.</p>
+      <code class="code-block">{<br />
+        <span />"username": "tanya",<br />
+        <span />"instance-id": 1,<br />
+        <span />"token":  "13b8cb27108fcbb771188210051e8ea19a2ccc9f"<br />
+      }</code>
     </section>
-    <section class="main-section" id="section_2">
-      <header>Section 2</header>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus suscipit laudantium, tempora quis vitae placeat. Impedit quisquam animi fuga modi doloremque non officiis. Repellat, doloribus ad obcaecati at voluptatum repudiandae.</p>
+
+    <!-- LOGGING IN -->
+    <section class="main-section" id="logging_in">
+      <header>Logging in</header>
+      <p>Various services require your login token. If you are not logged in, you can get your temporary login token with the following:</p>
+      <code class="code-block">POST /login<br />
+        <span class="info">// HTTP headers</span><br />
+        <br />
+        {<br />
+          <span />"email": YOUR_EMAIL,<br />
+          <span />"password": YOUR_PASSWORD<br />
+      }</code>
+      <p>Note that you must use HTTPS protocol for this to work.</p>
+
+      <p>If the request is successful, a JSON object with your token is returned.</p>
+      <code class="code-block">{<br />
+        <span />"token":  "13b8cb27108fcbb771188210051e8ea19a2ccc9f"<br />
+      }</code>
     </section>
-    <section class="main-section" id="section_3">
-      <header>Section 3</header>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem illum cumque quisquam ea provident nostrum tempora. Recusandae delectus optio, sunt quia eligendi dolores autem iure nostrum esse beatae, aperiam numquam.</p>
+
+    <!-- SEARCHING USERS -->
+    <section class="main-section" id="searching_users">
+      <header>Searching Users</header>
+      <p>In case you find the need to look for a user or a vendor, use the following request:</p>
+      <code class="code-block">GET /search/users?username=USERNAME_QUERY</code>
+      
+
+      <p>If the request is successful, a JSON array of possible users is returned.</p>
+      <code class="code-block">[<br />
+        <span />{<br />
+        <span /><span />"username": "danilo",<br />
+        <span /><span />"instance-id": 42,<br />
+        <span /><span />"monkey-points": 4.7,<br />
+        <span /><span />"profile-photo": "api.monkeybusiness.com/user/danilo_42/profile-photo.jpg"<br />
+        <span />},<br />
+        <span /><span class="info">// More users here</span><br />
+      ]</code>
+
+      <p>Users are identified both by their username and instance-id. Hence, a user with a username of "danilo" and an instance-id of 42 should be referred to as <code>danilo#42</code>. Preceding zeroes are ignored, so the following would refer to the same user:
+        <ul>
+          <li>danilo#042</li>
+          <li>danilo#0000042</li>
+          <li>danilo#0042</li>
+        </ul>
+      </p>
+      <p>If you know the instance-id of a specific user, you can use the following request instead:</p>
+      <code class="code-block">GET /search/users?username=USERNAME_QUERY&instance-id=INSTANCE_ID</code>
+
+      <p>If the request is successful, it returns a single JSON object of the searched user.</p>
+      <code class="code-block">{<br />
+        <span />"username": "danilo",<br />
+        <span />"instance-id": 42,<br />
+        <span />"monkey-points": 4.7,<br />
+        <span />"profile-photo": "api.monkeybusiness.com/user/danilo_42/profile-photo.jpg"<br />
+        }</code>
+
     </section>
-    <section class="main-section" id="section_4">
-      <header>Section 4</header>
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita pariatur voluptatibus velit nisi mollitia, culpa inventore necessitatibus explicabo, dolorem nam possimus. Et expedita nihil eos deleniti in, dolores libero consequatur!</p>
+
+    <!-- GETTING BANANAS -->
+    <section class="main-section" id="getting_bananas">
+      <header>Getting bananas</header>
+      <p>Bananas are the currency in Monkey Business. Get your current available bananas with the following:</p>
+      <code class="code-block">GET /me/bananas</code>
+
+      <p>If the request is successful, it returns a JSON object with the amount of bananas available and the date of retrieval.</p>
+      <code class="code-block">{<br />
+        <span />"bananas": 467,<br />
+        <span />"date": "01-15-21 14:57"<br />
+      }</code>
+
+      <p>Dates returned are in the format <code>MM-dd-yy HH:MM</code>.</p>
     </section>
-    <section class="main-section" id="section_5">
-      <header>Section 5</header>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis temporibus unde quos, deserunt aperiam voluptatibus, explicabo, at facere labore eaque cumque modi ex eos eum! Dolore nostrum praesentium eligendi harum!</p>
+
+    <!-- SEARCHING FOR ITEMS -->
+    <section class="main-section" id="searching_for_items">
+      <header>Searching for Items</header>
+      <p>
+        Buying and selling items are the primary business actions in Monkey Business. To get started, you can search for items with the following request:
+      </p>
+
+      <code class="code-block">GET /search/items?query=YOUR_QUERY</code>
+
+      <p>If the request is successful, it returns a JSON array of related items.</p>
+      <code class="code-block">[<br />
+        <span />{<br />
+        <span /><span />"name": "Gorilla Glue",<br />
+        <span /><span />"item-id": 354,<br />
+        <span /><span />"rating": 4.2,<br />
+        <span /><span />"vendor": {<br />
+        <span /><span /><span />"username": "danilo",<br />
+        <span /><span /><span />"instance-id": 42,<br />
+        <span /><span /><span />"monkey-points": 4.7,<br />
+        <span /><span /><span />"profile-photo": "api.monkeybusiness.com/user/danilo_42/profile-photo.jpg"<br />
+        <span /><span />}<br />
+        <span />},<br />
+        <span /><span class="info">// More items here</span><br />
+      ]</code>
+    </section>
+
+    <!-- BUYING ITEMS -->
+    <section class="main-section" id="buying_items">
+      <header>Buying Items</header>
+      <p>In order to buy a specific item, you need to have the <code>item-id</code> of that item. Use the following request to buy an item:</p>
+
+      <code class="code-block">GET /buy/ITEM_ID</code>
+
+      <p>Note that in order for the request to work, you would need to include your login token to your request. This can be done in two ways:
+        <ul>
+          <li>HTTP Authorization header</li>
+          <li>Client-ID query parameter</li>
+        </ul>
+      </p>
+
+      <p>
+        <strong>HTTP Authorization Header</strong><br />
+        You can include an Authorization header to your POST request.
+      </p>
+      <code class="code-block">Authorization: Client-ID YOUR_LOGIN_TOKEN</code>
+
+      <p>
+        <strong>Client-ID query parameter</strong><br />
+        You can also pass your login token as a <code>client-id</code> query parameter.
+      </p>
+      <code class="code-block">https://api.monkeybusiness.com/buy/ITEM_ID?client-id=YOUR_LOGIN_TOKEN</code>
+
+      <p>If the request is successful, it returns the details of the transaction.</p>
+      <code class="code-block">{<br />
+        <span />"transaction-no": 109045789654,<br />
+        <span />"buyer": {<br />
+        <span /><span />"username": "danilo",<br />
+        <span /><span />"instance-id": 42,<br />
+        <span /><span />"monkey-points": 4.7,<br />
+        <span /><span />"profile-photo": "api.monkeybusiness.com/user/danilo_42/profile-photo.jpg"<br />
+        <span />},<br />
+        <span />"vendor": {<br />
+        <span /><span />"username": "danilo",<br />
+        <span /><span />"instance-id": 42,<br />
+        <span /><span />"monkey-points": 4.7,<br />
+        <span /><span />"profile-photo": "api.monkeybusiness.com/user/danilo_42/profile-photo.jpg"<br />
+        <span />},<br />
+        <span />"item-id": 354,<br />
+        <span />"cost": 29<br />
+      }</code>
     </section>
   </main>
 
