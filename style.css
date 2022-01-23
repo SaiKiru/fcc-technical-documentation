@@ -1,7 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Source+Sans+Pro&family=Inter&display=swap');
+
 :root {
     --accent-color: hsl(337, 86%, 36%);
     --selection-bg-color: hsl(337, 71%, 47%);
+    --panel-fg-color: hsl(340, 70%, 36%);
+    --panel-bg-color: hsl(330, 81%, 17%);
+    --panel-bg-font-color: hsl(330, 40%, 80%);
 }
 
 ::selection {
@@ -21,7 +25,37 @@ body {
     position: fixed;
     width: 300px;
     height: 100%;
-    background-color: violet;
+    background-color: var(--panel-bg-color);
+}
+
+#navbar header {
+    padding: 16px 8px;
+    font-family: Inter, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: var(--panel-fg-color);
+}
+
+#navbar ul {
+    padding: 0px;
+    list-style: none;
+}
+
+#navbar a {
+    font-size: 18px;
+    text-decoration: none;
+    color: var(--panel-bg-font-color);
+}
+
+#navbar li {
+    padding: 16px;
+}
+
+#navbar li:hover {
+    background-color: var(--panel-fg-color);
+    color: white;
 }
 
 #main-doc {
